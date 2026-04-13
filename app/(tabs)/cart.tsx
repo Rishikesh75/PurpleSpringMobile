@@ -31,7 +31,7 @@ export default function CartTabScreen() {
           <ThemedText style={styles.emptySub}>
             Add saffron from the Shop tab to see it here.
           </ThemedText>
-          <Button onPress={() => router.push('/(tabs)/shop')} style={styles.cta}>
+          <Button onPress={() => router.push('/(tabs)/cart')} style={styles.cta}>
             Browse shop
           </Button>
         </ThemedView>

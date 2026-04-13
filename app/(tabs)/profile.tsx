@@ -32,7 +32,7 @@ export default function AboutTabScreen() {
           <ThemedText type="subtitle">Support</ThemedText>
           <ThemedText style={styles.p}>hello@purplespring.example</ThemedText>
         </ThemedView>
-        <Button onPress={() => router.push('/(tabs)/shop')} style={styles.cta}>
+        <Button onPress={() => router.push('/(tabs)/cart')} style={styles.cta}>
           Shop now
         </Button>
       </ScrollView>

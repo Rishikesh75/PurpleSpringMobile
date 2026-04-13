@@ -19,25 +19,28 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: c.background }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.scroll}>
+        {/* Todo: Here i need the icon for the user icons where when we click on that we have login to the user information here */}
+        {/* view to Topmost items like two to three and show more nativigating to the shop page */}
+        {/* */}
         <ThemedView style={styles.hero}>
-          <ThemedText type="title" style={styles.brandTitle}>
-            Purple Spring
-          </ThemedText>
-          <ThemedText style={styles.tagline}>Premium saffron, sourced with care.</ThemedText>
-          <Image
+          {/* <ThemedText type="title" style={styles.brandTitle}>
+            Purple Springs
+          </ThemedText> */}
+          {/* <ThemedText style={styles.tagline}>Premium saffron, sourced with care.</ThemedText> */}
+          {/* <Image
             source={{
               uri: 'https://images.unsplash.com/photo-1596040033229-a9821ebd38af?w=1200&q=80',
             }}
             style={styles.heroImage}
             contentFit="cover"
-          />
-          <ThemedText style={styles.heroCopy}>
+          /> */}
+          {/* <ThemedText style={styles.heroCopy}>
             Threads hand-selected for color and aroma—perfect for rice dishes, desserts, and tea.
-          </ThemedText>
-          <Button onPress={() => router.push('/(tabs)/shop')}>Shop saffron</Button>
+          </ThemedText> */}
+          {/* <Button onPress={() => router.push('/(tabs)/shop')}>Shop saffron</Button> */}
         </ThemedView>
 
-        <ThemedView style={styles.section}>
+        {/* <ThemedView style={styles.section}>
           <ThemedText type="subtitle">Featured</ThemedText>
           <Pressable
             accessibilityRole="button"
@@ -52,7 +55,7 @@ export default function HomeScreen() {
               </ThemedText>
             </View>
           </Pressable>
-        </ThemedView>
+        </ThemedView> */}
       </ScrollView>
     </SafeAreaView>
   );
