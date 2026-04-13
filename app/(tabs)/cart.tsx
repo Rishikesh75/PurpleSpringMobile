@@ -5,52 +5,46 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CartLineRow from '@/components/CartItem';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors } from '@/constants/theme';
+import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks/useCart';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
 import { formatUsd } from '@/utils/format';
 
 export default function CartTabScreen() {
   const router = useRouter();
-  const colorScheme = useColorScheme();
-  const tint = Colors[colorScheme ?? 'light'].tint;
+  const c = useSemanticPalette();
   const { lines, isReady, subtotalCents, clear } = useCart();
 
   if (!isReady) {
     return (
       <ThemedView style={styles.centered}>
-        <ActivityIndicator size="large" color={tint} />
+        <ActivityIndicator size="large" color={c.primary} />
       </ThemedView>
     );
   }
 
   if (lines.length === 0) {
     return (
-      <SafeAreaView style={styles.safe} edges={['top']}>
+      <SafeAreaView style={[styles.safe, { backgroundColor: c.background }]} edges={['top']}>
         <ThemedView style={styles.empty}>
           <ThemedText type="title">Your cart is empty</ThemedText>
           <ThemedText style={styles.emptySub}>
             Add saffron from the Shop tab to see it here.
           </ThemedText>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => router.push('/(tabs)/shop')}
-            style={[styles.cta, { backgroundColor: tint }]}>
-            <ThemedText style={styles.ctaText} lightColor="#fff" darkColor="#1a1025">
-              Browse shop
-            </ThemedText>
-          </Pressable>
+          <Button onPress={() => router.push('/(tabs)/shop')} style={styles.cta}>
+            Browse shop
+          </Button>
         </ThemedView>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: c.background }]} edges={['top']}>
       <ThemedView style={styles.header}>
         <ThemedText type="title">Cart</ThemedText>
         <Pressable onPress={clear} hitSlop={12}>
-          <ThemedText style={[styles.clearText, { color: tint }]}>Clear all</ThemedText>
+          <ThemedText style={[styles.clearText, { color: c.primary }]}>Clear all</ThemedText>
         </Pressable>
       </ThemedView>
       <FlatList
@@ -59,20 +53,16 @@ export default function CartTabScreen() {
         contentContainerStyle={styles.list}
         renderItem={({ item }) => <CartLineRow line={item} />}
       />
-      <ThemedView style={styles.footer}>
+      <ThemedView style={[styles.footer, { borderTopColor: c.border }]}>
         <ThemedText type="defaultSemiBold" style={styles.totalLabel}>
           Subtotal
         </ThemedText>
-        <ThemedText type="title" style={{ color: tint }}>
+        <ThemedText type="title" style={{ color: c.primary }}>
           {formatUsd(subtotalCents)}
         </ThemedText>
-        <Pressable
-          style={[styles.checkout, { backgroundColor: tint }]}
-          onPress={() => router.push('/checkout')}>
-          <ThemedText style={styles.ctaText} lightColor="#fff" darkColor="#1a1025">
-            Checkout
-          </ThemedText>
-        </Pressable>
+        <Button onPress={() => router.push('/checkout')} style={styles.checkout}>
+          Checkout
+        </Button>
       </ThemedView>
     </SafeAreaView>
   );
@@ -96,22 +86,14 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 8,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: '#ccc',
   },
   totalLabel: { fontSize: 14, opacity: 0.8 },
   checkout: {
     marginTop: 8,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
+    alignSelf: 'stretch',
   },
   cta: {
     marginTop: 12,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
     alignSelf: 'flex-start',
-    paddingHorizontal: 24,
   },
-  ctaText: { fontSize: 17, fontWeight: '600' },
 });

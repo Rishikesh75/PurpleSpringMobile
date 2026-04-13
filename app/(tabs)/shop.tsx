@@ -4,10 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ProductList from '@/components/ProductList';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
 
 export default function ShopScreen() {
+  const c = useSemanticPalette();
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: c.background }]} edges={['top']}>
       <ThemedView style={styles.header}>
         <ThemedText type="title">Shop</ThemedText>
         <ThemedText style={styles.sub}>All Purple Spring saffron</ThemedText>

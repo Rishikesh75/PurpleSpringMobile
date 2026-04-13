@@ -2,9 +2,8 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/theme';
 import { useCart } from '@/hooks/useCart';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
 import type { CartLine } from '@/types';
 import { formatUsd } from '@/utils/format';
 
@@ -15,13 +14,12 @@ type Props = {
 export default function CartLineRow({ line }: Props) {
   const { product, quantity } = line;
   const { setQuantity, removeLine } = useCart();
-  const colorScheme = useColorScheme();
-  const tint = Colors[colorScheme ?? 'light'].tint;
+  const c = useSemanticPalette();
 
   const lineTotal = product.priceCents * quantity;
 
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, { borderBottomColor: c.border }]}>
       <Image source={{ uri: product.image }} style={styles.thumb} contentFit="cover" />
       <View style={styles.mid}>
         <ThemedText type="defaultSemiBold" numberOfLines={2}>
@@ -30,22 +28,22 @@ export default function CartLineRow({ line }: Props) {
         <ThemedText style={styles.unit}>{formatUsd(product.priceCents)} each</ThemedText>
         <View style={styles.stepper}>
           <Pressable
-            style={[styles.stepBtn, { borderColor: tint }]}
+            style={[styles.stepBtn, { borderColor: c.border }]}
             onPress={() => setQuantity(product.id, quantity - 1)}
             hitSlop={8}>
-            <ThemedText style={[styles.stepLabel, { color: tint }]}>−</ThemedText>
+            <ThemedText style={[styles.stepLabel, { color: c.primary }]}>−</ThemedText>
           </Pressable>
           <ThemedText style={styles.qty}>{quantity}</ThemedText>
           <Pressable
-            style={[styles.stepBtn, { borderColor: tint }]}
+            style={[styles.stepBtn, { borderColor: c.border }]}
             onPress={() => setQuantity(product.id, quantity + 1)}
             hitSlop={8}>
-            <ThemedText style={[styles.stepLabel, { color: tint }]}>+</ThemedText>
+            <ThemedText style={[styles.stepLabel, { color: c.primary }]}>+</ThemedText>
           </Pressable>
         </View>
       </View>
       <View style={styles.right}>
-        <ThemedText style={[styles.lineTotal, { color: tint }]}>{formatUsd(lineTotal)}</ThemedText>
+        <ThemedText style={[styles.lineTotal, { color: c.primary }]}>{formatUsd(lineTotal)}</ThemedText>
         <Pressable onPress={() => removeLine(product.id)} hitSlop={8}>
           <ThemedText style={styles.remove}>Remove</ThemedText>
         </Pressable>
@@ -61,7 +59,6 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(128,128,128,0.35)',
   },
   thumb: { width: 72, height: 72, borderRadius: 12 },
   mid: { flex: 1, gap: 6 },

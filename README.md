@@ -2,6 +2,12 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Design tokens (web parity)
+
+Semantic colors, radius, and spacing live in **`constants/theme.ts`**. They follow the same names as the Purple Spring web app’s shadcn-style CSS variables (`background`, `foreground`, `primary`, `muted`, `destructive`, chart tokens, etc.). When the web `frontend/src/index.css` is available, keep light/dark hex values aligned with `:root` and `.dark`.
+
+See also `docs/expo-mobile-prompt.md` for the mobile–web consistency brief.
+
 ## Get started
 
 1. Install dependencies

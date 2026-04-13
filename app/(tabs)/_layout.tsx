@@ -6,15 +6,22 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useCart } from '@/hooks/useCart';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { itemCount } = useCart();
+  const c = useSemanticPalette();
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarInactiveTintColor: c.mutedForeground,
+        tabBarStyle: {
+          backgroundColor: c.card,
+          borderTopColor: c.border,
+        },
         headerShown: false,
         tabBarButton: HapticTab,
       }}>

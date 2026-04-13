@@ -7,22 +7,22 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  TextInput,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors } from '@/constants/theme';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/hooks/useCart';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
 import { formatUsd } from '@/utils/format';
 
 export default function CheckoutScreen() {
   const router = useRouter();
-  const colorScheme = useColorScheme();
-  const tint = Colors[colorScheme ?? 'light'].tint;
+  const c = useSemanticPalette();
   const { lines, subtotalCents, clear } = useCart();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -30,7 +30,7 @@ export default function CheckoutScreen() {
 
   if (lines.length === 0) {
     return (
-      <SafeAreaView style={styles.safe} edges={['bottom']}>
+      <SafeAreaView style={[styles.safe, { backgroundColor: c.background }]} edges={['bottom']}>
         <ThemedView style={styles.empty}>
           <ThemedText type="title">Nothing to checkout</ThemedText>
           <Pressable onPress={() => router.replace('/(tabs)/shop')}>
@@ -50,42 +50,28 @@ export default function CheckoutScreen() {
     Alert.alert(
       'Order placed (demo)',
       'Thank you! This is a demo—no payment was processed.',
-      [{ text: 'OK', onPress: () => router.replace('/(tabs)/') }],
+      [{ text: 'OK', onPress: () => router.replace('/(tabs)') }],
     );
   };
 
-  const inputStyle = [
-    styles.input,
-    colorScheme === 'dark' ? styles.inputDark : styles.inputLight,
-  ];
-
   return (
     <KeyboardAvoidingView
-      style={styles.flex}
+      style={[styles.flex, { backgroundColor: c.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <ThemedText type="subtitle">Delivery</ThemedText>
         <ThemedText style={styles.hint}>Demo only—no real orders.</ThemedText>
-        <TextInput
-          placeholder="Full name"
-          placeholderTextColor="#888"
-          style={inputStyle}
-          value={name}
-          onChangeText={setName}
-        />
-        <TextInput
+        <Input placeholder="Full name" value={name} onChangeText={setName} />
+        <Input
           placeholder="Email"
-          placeholderTextColor="#888"
-          style={inputStyle}
           keyboardType="email-address"
           autoCapitalize="none"
           value={email}
           onChangeText={setEmail}
         />
-        <TextInput
+        <Input
           placeholder="Address (optional)"
-          placeholderTextColor="#888"
-          style={[inputStyle, styles.multiline]}
+          style={styles.multiline}
           multiline
           value={address}
           onChangeText={setAddress}
@@ -100,18 +86,17 @@ export default function CheckoutScreen() {
               <ThemedText>{formatUsd(line.product.priceCents * line.quantity)}</ThemedText>
             </View>
           ))}
+          <Separator style={styles.sep} />
           <View style={[styles.row, styles.totalRow]}>
             <ThemedText type="defaultSemiBold">Total</ThemedText>
-            <ThemedText style={{ color: tint, fontWeight: '700', fontSize: 18 }}>
+            <ThemedText style={{ color: c.primary, fontWeight: '700', fontSize: 18 }}>
               {formatUsd(subtotalCents)}
             </ThemedText>
           </View>
         </View>
-        <Pressable style={[styles.place, { backgroundColor: tint }]} onPress={submit}>
-          <ThemedText style={styles.placeText} lightColor="#fff" darkColor="#1a1025">
-            Place order
-          </ThemedText>
-        </Pressable>
+        <Button onPress={submit} style={styles.place}>
+          Place order
+        </Button>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -123,33 +108,14 @@ const styles = StyleSheet.create({
   empty: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 12, padding: 24 },
   scroll: { padding: 20, gap: 12, paddingBottom: 40 },
   hint: { opacity: 0.7, marginBottom: 4 },
-  input: {
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
-  },
-  inputLight: {
-    borderColor: '#ccc',
-    color: '#111',
-    backgroundColor: '#fafafa',
-  },
-  inputDark: {
-    borderColor: '#444',
-    color: '#eee',
-    backgroundColor: '#222',
-  },
   multiline: { minHeight: 80, textAlignVertical: 'top' },
   summary: { marginTop: 16, gap: 8 },
   row: { flexDirection: 'row', justifyContent: 'space-between' },
   rowLabel: { flex: 1, paddingRight: 12 },
-  totalRow: { marginTop: 8, paddingTop: 12, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: '#888' },
+  totalRow: { marginTop: 8, paddingTop: 4 },
+  sep: { marginTop: 8 },
   place: {
     marginTop: 20,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
+    alignSelf: 'stretch',
   },
-  placeText: { fontSize: 17, fontWeight: '600' },
 });

@@ -1,10 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
+
+/** Optional chrome header — uses semantic primary surface (not used on main tabs). */
 export default function Header() {
+  const c = useSemanticPalette();
   return (
-    <View style={styles.header}>
-      <Text style={styles.title}>PurpleSprings</Text>
+    <View style={[styles.header, { backgroundColor: c.primary }]}>
+      <Text style={[styles.title, { color: c.primaryForeground }]}>Purple Spring</Text>
     </View>
   );
 }
@@ -13,11 +16,9 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 40,
     paddingBottom: 16,
-    backgroundColor: '#6c63ff',
     alignItems: 'center',
   },
   title: {
-    color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
   },

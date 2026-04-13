@@ -1,19 +1,18 @@
 import { useRouter } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Button } from '@/components/ui/button';
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
 
 export default function AboutTabScreen() {
   const router = useRouter();
-  const colorScheme = useColorScheme();
-  const tint = Colors[colorScheme ?? 'light'].tint;
+  const c = useSemanticPalette();
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: c.background }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <ThemedView style={styles.block}>
           <ThemedText type="title">Purple Spring</ThemedText>
@@ -33,14 +32,9 @@ export default function AboutTabScreen() {
           <ThemedText type="subtitle">Support</ThemedText>
           <ThemedText style={styles.p}>hello@purplespring.example</ThemedText>
         </ThemedView>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => router.push('/(tabs)/shop')}
-          style={[styles.cta, { backgroundColor: tint }]}>
-          <ThemedText style={styles.ctaText} lightColor="#fff" darkColor="#1a1025">
-            Shop now
-          </ThemedText>
-        </Pressable>
+        <Button onPress={() => router.push('/(tabs)/shop')} style={styles.cta}>
+          Shop now
+        </Button>
       </ScrollView>
     </SafeAreaView>
   );
@@ -52,10 +46,7 @@ const styles = StyleSheet.create({
   block: { gap: 8 },
   p: { fontSize: 16, lineHeight: 24, opacity: 0.9 },
   cta: {
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
     marginTop: 8,
+    alignSelf: 'stretch',
   },
-  ctaText: { fontSize: 17, fontWeight: '600' },
 });

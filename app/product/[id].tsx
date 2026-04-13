@@ -6,18 +6,17 @@ import { useNavigation } from '@react-navigation/native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { Button } from '@/components/ui/button';
 import { getProductById } from '@/constants/products';
-import { Colors } from '@/constants/theme';
 import { useCart } from '@/hooks/useCart';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
 import { formatUsd } from '@/utils/format';
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const navigation = useNavigation();
-  const colorScheme = useColorScheme();
-  const tint = Colors[colorScheme ?? 'light'].tint;
+  const c = useSemanticPalette();
   const { addItem } = useCart();
 
   const product = typeof id === 'string' ? getProductById(id) : undefined;
@@ -48,22 +47,20 @@ export default function ProductDetailScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scroll}>
+    <ScrollView
+      style={{ backgroundColor: c.background }}
+      contentContainerStyle={styles.scroll}>
       <Image source={{ uri: product.image }} style={styles.image} contentFit="cover" />
       <ThemedView style={styles.body}>
         <ThemedText type="title">{product.name}</ThemedText>
         <ThemedText style={styles.meta}>
           {product.origin} · {product.weightLabel}
         </ThemedText>
-        <ThemedText style={styles.price} lightColor={tint} darkColor={tint}>
-          {formatUsd(product.priceCents)}
-        </ThemedText>
+        <ThemedText style={[styles.price, { color: c.primary }]}>{formatUsd(product.priceCents)}</ThemedText>
         <ThemedText style={styles.desc}>{product.description}</ThemedText>
-        <Pressable style={[styles.addBtn, { backgroundColor: tint }]} onPress={onAdd}>
-          <ThemedText style={styles.addText} lightColor="#fff" darkColor="#1a1025">
-            Add to cart
-          </ThemedText>
-        </Pressable>
+        <Button onPress={onAdd} style={styles.addBtn}>
+          Add to cart
+        </Button>
       </ThemedView>
     </ScrollView>
   );
@@ -80,9 +77,6 @@ const styles = StyleSheet.create({
   desc: { fontSize: 16, lineHeight: 24 },
   addBtn: {
     marginTop: 8,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
+    alignSelf: 'stretch',
   },
-  addText: { fontSize: 17, fontWeight: '600' },
 });

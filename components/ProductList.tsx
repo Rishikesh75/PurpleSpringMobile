@@ -3,27 +3,25 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 
 import ProductCard from '@/components/ProductCard';
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/theme';
 import useProducts from '@/hooks/useProducts';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
 
 export default function ProductList() {
   const router = useRouter();
   const { products, loading, error } = useProducts();
-  const colorScheme = useColorScheme();
-  const tint = Colors[colorScheme ?? 'light'].tint;
+  const c = useSemanticPalette();
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color={tint} />
+      <View style={[styles.center, { backgroundColor: c.background }]}>
+        <ActivityIndicator size="large" color={c.primary} />
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.center}>
+      <View style={[styles.center, { backgroundColor: c.background }]}>
         <ThemedText>{error}</ThemedText>
       </View>
     );
@@ -31,6 +29,7 @@ export default function ProductList() {
 
   return (
     <FlatList
+      style={{ backgroundColor: c.background }}
       data={products}
       keyExtractor={(item) => item.id}
       numColumns={2}

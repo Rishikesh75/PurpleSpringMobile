@@ -2,11 +2,11 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/theme';
+import { radius, spacing } from '@/constants/theme';
 import type { Product } from '@/types';
 import { formatUsd } from '@/utils/format';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useSemanticPalette } from '@/hooks/use-semantic-color';
 
 type Props = {
   product: Product;
@@ -14,12 +14,18 @@ type Props = {
 };
 
 export default function ProductCard({ product, onPress }: Props) {
-  const colorScheme = useColorScheme();
-  const tint = Colors[colorScheme ?? 'light'].tint;
+  const c = useSemanticPalette();
 
   return (
     <Pressable
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        styles.card,
+        {
+          backgroundColor: c.card,
+          borderColor: c.border,
+        },
+        pressed && styles.pressed,
+      ]}
       onPress={onPress}>
       <Image source={{ uri: product.image }} style={styles.image} contentFit="cover" />
       <View style={styles.text}>
@@ -29,7 +35,7 @@ export default function ProductCard({ product, onPress }: Props) {
         <ThemedText style={styles.sub} numberOfLines={2}>
           {product.shortDescription}
         </ThemedText>
-        <ThemedText style={[styles.price, { color: tint }]}>{formatUsd(product.priceCents)}</ThemedText>
+        <ThemedText style={[styles.price, { color: c.primary }]}>{formatUsd(product.priceCents)}</ThemedText>
         <ThemedText style={styles.weight}>{product.weightLabel}</ThemedText>
       </View>
     </Pressable>
@@ -39,14 +45,14 @@ export default function ProductCard({ product, onPress }: Props) {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    margin: 8,
-    borderRadius: 16,
+    margin: spacing[2],
+    borderRadius: radius.xl,
     overflow: 'hidden',
-    backgroundColor: 'rgba(128,128,128,0.08)',
+    borderWidth: 1,
   },
   pressed: { opacity: 0.92 },
   image: { width: '100%', aspectRatio: 1 },
-  text: { padding: 12, gap: 4 },
+  text: { padding: spacing[3], gap: spacing[1] },
   sub: { fontSize: 13, opacity: 0.8 },
   price: { fontWeight: '700', fontSize: 16, marginTop: 4 },
   weight: { fontSize: 12, opacity: 0.65 },
