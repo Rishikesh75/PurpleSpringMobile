@@ -1,31 +1,83 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Image } from 'expo-image';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-interface CartItemProps {
-  name: string;
-  price: string;
-  quantity: number;
-}
+import { ThemedText } from '@/components/themed-text';
+import { Colors } from '@/constants/theme';
+import { useCart } from '@/hooks/useCart';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import type { CartLine } from '@/types';
+import { formatUsd } from '@/utils/format';
 
-export default function CartItem({ name, price, quantity }: CartItemProps) {
+type Props = {
+  line: CartLine;
+};
+
+export default function CartLineRow({ line }: Props) {
+  const { product, quantity } = line;
+  const { setQuantity, removeLine } = useCart();
+  const colorScheme = useColorScheme();
+  const tint = Colors[colorScheme ?? 'light'].tint;
+
+  const lineTotal = product.priceCents * quantity;
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.price}>{price}</Text>
-      <Text style={styles.quantity}>x{quantity}</Text>
+    <View style={styles.row}>
+      <Image source={{ uri: product.image }} style={styles.thumb} contentFit="cover" />
+      <View style={styles.mid}>
+        <ThemedText type="defaultSemiBold" numberOfLines={2}>
+          {product.name}
+        </ThemedText>
+        <ThemedText style={styles.unit}>{formatUsd(product.priceCents)} each</ThemedText>
+        <View style={styles.stepper}>
+          <Pressable
+            style={[styles.stepBtn, { borderColor: tint }]}
+            onPress={() => setQuantity(product.id, quantity - 1)}
+            hitSlop={8}>
+            <ThemedText style={[styles.stepLabel, { color: tint }]}>−</ThemedText>
+          </Pressable>
+          <ThemedText style={styles.qty}>{quantity}</ThemedText>
+          <Pressable
+            style={[styles.stepBtn, { borderColor: tint }]}
+            onPress={() => setQuantity(product.id, quantity + 1)}
+            hitSlop={8}>
+            <ThemedText style={[styles.stepLabel, { color: tint }]}>+</ThemedText>
+          </Pressable>
+        </View>
+      </View>
+      <View style={styles.right}>
+        <ThemedText style={[styles.lineTotal, { color: tint }]}>{formatUsd(lineTotal)}</ThemedText>
+        <Pressable onPress={() => removeLine(product.id)} hitSlop={8}>
+          <ThemedText style={styles.remove}>Remove</ThemedText>
+        </Pressable>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 12,
-    borderBottomWidth: 1,
-    borderColor: '#eee',
+    alignItems: 'flex-start',
+    gap: 12,
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'rgba(128,128,128,0.35)',
   },
-  name: { fontWeight: 'bold' },
-  price: { color: '#6c63ff' },
-  quantity: { color: '#888' },
+  thumb: { width: 72, height: 72, borderRadius: 12 },
+  mid: { flex: 1, gap: 6 },
+  unit: { fontSize: 13, opacity: 0.75 },
+  stepper: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4 },
+  stepBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepLabel: { fontSize: 18, fontWeight: '700' },
+  qty: { fontSize: 16, fontWeight: '600', minWidth: 24, textAlign: 'center' },
+  right: { alignItems: 'flex-end', gap: 8 },
+  lineTotal: { fontWeight: '700', fontSize: 16 },
+  remove: { fontSize: 14, opacity: 0.7 },
 });

@@ -1,10 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+import { fetchProducts } from '@/services/api';
+import type { Product } from '@/types';
 
 export default function useProducts() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    // Fetch products from API
-    setProducts([]);
+    let cancelled = false;
+    setLoading(true);
+    fetchProducts()
+      .then((data) => {
+        if (!cancelled) {
+          setProducts(data);
+          setError(null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setError('Could not load products.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
-  return { products };
+
+  return { products, loading, error };
 }

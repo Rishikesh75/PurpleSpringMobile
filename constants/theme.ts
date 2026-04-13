@@ -5,8 +5,9 @@
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+/** Purple Spring brand: deep purple + saffron gold */
+const tintColorLight = '#5B2D8C';
+const tintColorDark = '#E8C547';
 
 export const Colors = {
   light: {
