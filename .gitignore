@@ -9,14 +9,24 @@ dist/
 web-build/
 expo-env.d.ts
 
-# Native
+# Native build files (keep folders, ignore builds)
+android/.gradle/
+android/app/build/
+android/build/
+
+ios/Pods/
+ios/build/
+
+# Kotlin / Gradle
 .kotlin/
-*.orig.*
+
+# Certificates / Keys (VERY IMPORTANT to ignore)
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
+*.pem
 
 # Metro
 .metro-health-check*
@@ -28,7 +38,6 @@ yarn-error.*
 
 # macOS
 .DS_Store
-*.pem
 
 # local env files
 .env*.local
@@ -36,8 +45,8 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-app-example
+# misc
+*.orig.*
 
-# generated native folders
-/ios
-/android
+# example apps
+app-example
