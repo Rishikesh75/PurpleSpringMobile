@@ -19,8 +19,16 @@ const MAPPING = {
   'bag.fill': 'shopping-bag',
   'cart.fill': 'shopping-cart',
   'info.circle.fill': 'info',
+  'person.circle.fill': 'account-circle',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  'leaf.fill': 'eco',
+  'medal.fill': 'military-tech',
+  'person.3.fill': 'groups',
+  'heart.fill': 'favorite',
+  'sun.max.fill': 'light-mode',
+  'moon.stars': 'dark-mode',
+  'headset.circle.fill': 'headset-mic',
 } as IconMapping;
 
 /**

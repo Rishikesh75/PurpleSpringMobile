@@ -54,9 +54,18 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'About',
+          title: 'Profile',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="info.circle.fill" color={color} />
+            <IconSymbol size={28} name="person.circle.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="support"
+        options={{
+          title: 'Support',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="headset.circle.fill" color={color} />
           ),
         }}
       />
